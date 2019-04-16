@@ -37,3 +37,19 @@
         dest: /var/www/
         remote_src: yes
       become: yes
+    - name: 'Create the configuration file of wp'
+      copy:
+        src: '/var/www/wordpress/wp-config-sample.php'
+        dest: '/var/www/wordpress/wp-config.php'
+        remote_src: yes
+      become: yes
+    - name: 'Config the wp-config with database configs'
+      replace:
+        path: '/var/www/wordpress/wp-config.php'
+        regexp: "{{ item.regex }}"
+        replace: "{{ item.value }}"
+      loop:
+        - { regex: 'database_name_here', value: 'wordpress_db'}
+        - { regex: 'username_here', value: 'wordpress_user'}
+        - { regex: 'password_here', value: '12345'}
+      become: yes
